@@ -2,6 +2,7 @@
 
 import RPi.GPIO as GPIO
 import time
+import threading
 import math
 
 SDI   = 26#or 26 red 21 green
@@ -117,10 +118,10 @@ def hc595_in(dat):
 def hc595_inCustom(idMotif):
 	for bit in range(0,8):
 		for line in range(0,nbShift):
-			print("line",line)
-			print("idmotif",idMotif)
-			print(motif)
-			print(motif[idMotif][line])
+			#print("line",line)
+			#print("idmotif",idMotif)
+			#print(motif)
+			#print(motif[idMotif][line])
 			#GPIO.output(26, 0x80 & (1 << bit))
 			#GPIO.output(21, 0x80 & (1 << bit))
 			GPIO.output(DataOutPut[line], 0x80 & (motif[idMotif][line] << bit))
@@ -139,16 +140,19 @@ def loop():
 	WhichLeds = LED0	# Change Mode, modes from LED0 to LED3
 	sleeptime = 0.5		# Change speed, lower value, faster speed
 	i = 0
-	while True:
+	def theLoop():
+		i=1
+	#while True:
 		#value = WhichLeds[i%len(WhichLeds)]
 		# hc595_in(value)
 		hc595_inCustom(i%nbMotif)
 		hc595_out()
 		#print 'update : ' + str(value)
 		print('Update mystere')
-		time.sleep(sleeptime)
 		i += 1
-
+		#time.sleep(sleeptime)
+		threading.Timer(sleeptime,theLoop).start()
+	theLoop()
 	#	for i in range(len(WhichLeds)-1, -1, -1):
 	#		hc595_in(WhichLeds[i])
 	#		hc595_out()
@@ -161,12 +165,10 @@ def destroy():   # When program ending, the function is executed.
 	GPIO.output(RCLK, GPIO.LOW)
 	GPIO.output(SRCLK, GPIO.LOW)
 	GPIO.cleanup()
-
-if __name__ == '__main__': # Program starting from here 
+	raise SystemExit
+def mainFunction():
 	GPIO.cleanup()
 	print_msg()
-	setup() 
-	try:
-		loop()  
-	except KeyboardInterrupt:  
-		destroy()  
+	setup()
+	loop()
+
