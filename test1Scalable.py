@@ -2,6 +2,7 @@
 
 import RPi.GPIO as GPIO
 import time
+import threading
 import math
 
 SDI   = 26#or 26 red 21 green
@@ -139,15 +140,21 @@ def loop():
 	WhichLeds = LED0	# Change Mode, modes from LED0 to LED3
 	sleeptime = 0.5		# Change speed, lower value, faster speed
 	i = 0
-	while True:
+
+  def theLoop():
+		i=1
+	#while True:
+
 		#value = WhichLeds[i%len(WhichLeds)]
 		# hc595_in(value)
 		hc595_inCustom(i%nbMotif)
 		hc595_out()
 		#print 'update : ' + str(value)
 		print('Update mystere')
-		time.sleep(sleeptime)
 		i += 1
+		#time.sleep(sleeptime)
+		threading.Timer(sleeptime,theLoop).start()
+	theLoop()
 
 	#	for i in range(len(WhichLeds)-1, -1, -1):
 	#		hc595_in(WhichLeds[i])
@@ -161,12 +168,10 @@ def destroy():   # When program ending, the function is executed.
 	GPIO.output(RCLK, GPIO.LOW)
 	GPIO.output(SRCLK, GPIO.LOW)
 	GPIO.cleanup()
-
-if __name__ == '__main__': # Program starting from here 
+	raise SystemExit
+def mainFunction():
 	GPIO.cleanup()
 	print_msg()
-	setup() 
-	try:
-		loop()  
-	except KeyboardInterrupt:  
-		destroy()  
+	setup()
+	loop()
+

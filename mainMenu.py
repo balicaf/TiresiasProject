@@ -2,11 +2,13 @@
 # -*- coding: latin-1 -*-
 
 import os
+from multiprocessing import Pool
 import time
 import datetime
 import random
 import getch
 import sys
+import threading
 import os.path
 import test1Scalable #mettre des commentaires ici pour que ca marche sans rasberry
 # enlever le commentaire de convert to hexa
@@ -14,7 +16,7 @@ import test1Scalable #mettre des commentaires ici pour que ca marche sans rasber
 
 #clear = lambda: os.system('cls') #windows
 os.system('clear')
-
+test1Scalable.mainFunction()
 userName=""
 stat=["","",""]
 statG=""
@@ -64,18 +66,21 @@ def stopGame():
 	os.system('clear')
 	print("Au revoir "+userName + " :)")
 	saveGame()
+	test1Scalable.destroy()
 	exit()
 def login():
 	print("Veuillez entrer votre prénom")
 	global userName
-	userName=raw_input("") #getch.getch().decode('utf-8') 
+	userName= raw_input("") #getch.getch().decode('utf-8')
 	userName=userName.lower()
 	print("Merci "+userName)
 	firstMenu()
 def moreInformation():
 	os.system('clear')
-	print("Les differents jeux on pour objectif:")
-	print("...")
+	print("Les differents jeux on pour objectif d'évaluer les limites du prototype, les améliorations à faire pour la prochaine version.")
+	print("D'évaluer l'apprentissage de differents utilisateurs avec un outil de statistique. Suivre des utilisateurs sur differentes seance d'apprentissage.")
+	print("De voir les limites sur les differents jeux représentant 3 perceptions differentes. La perception de la localisation, des mouvements et des motifs.")
+	print("")
 	print("0 pour retourner au menu principal")
 	print("1 pour quitter")
 	choice = getch.getch().decode('utf-8') 
@@ -97,9 +102,10 @@ def installationSuite(x,y):
 			print("0 pour la pin suivante")
 			print("1 pour retourner au menu principal")
 			choice = getch.getch().decode('utf-8') 
+			motif[i][j]=0
 			if(choice=='1'):
 				firstMenu()
-			motif[i][j]=0
+	os.system('clear')
 	print("Vous etes arrivé à la fin de l'installation.")
 	print("Appuyer sur 0 pour retourner au menu principal")
 	choice = getch.getch().decode('utf-8') 
@@ -149,14 +155,14 @@ def gameMenu():
 	else :
 		stopGame()
 def firstMenu():
-	os.system('clear')
+	#os.system('clear')
 	print (userName.capitalize()+", bienvenue sur le menu principal")
 	print ("choisisez :")
 	print ("0 pour en savoir plus sur le but des jeux")
 	print ("1 pour jouer")
 	print ("2 pour le programme d'installation")
 	print ("3 pour quitter")
-	choice = getch.getch().decode('utf-8') 
+	choice = getch.getch().decode('utf-8')
 	if(choice=='0'):
 		moreInformation()
 	elif(choice=='1'):
