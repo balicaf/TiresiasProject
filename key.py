@@ -30,11 +30,11 @@ def startKeyboard():
         thread.start()
 
 queue = Queue.Queue()
-#creation d'un threath qui reccupere les donnée pour la demonstration
-tests = Thread(name='test', target=test)#, args=queue)
+#creation d un threath qui reccupere les donnee pour la demonstration
+#tests = Thread(name='test', target=test)#, args=queue)
 threads = [Thread(target=listen, kwargs={"key":key,"q":queue}) for key in keys]
 
-tests.start()
+#tests.start()
 startKeyboard()
 
 
