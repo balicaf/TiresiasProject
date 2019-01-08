@@ -178,6 +178,7 @@ def theLoop():
 		GPIO.output(RCLK, GPIO.HIGH)
 		time.sleep(0.01)
                 i += 1
+		time.sleep(0.5)
                 #print("i",i,"nbMotif",nbMotif,"i%nbMotif",i%nbMotif,"motif2 ",motif2[i%nbMotif])
             #    hc595_inCustom(i%nbMotif)
             #    hc595_out()
