@@ -6,13 +6,13 @@ from multiprocessing import Pool
 import time
 import datetime
 import random
-import getch
+#import getch
 import sys
 import threading
 import os.path
 import test1Scalable #mettre des commentaires ici pour que ca marche sans rasberry
 # enlever le commentaire de convert to hexa
-
+import key
 
 #clear = lambda: os.system('cls') #windows
 os.system('clear')
@@ -69,9 +69,9 @@ def stopGame():
 	test1Scalable.destroy()
 	exit()
 def login():
-	print("Veuillez entrer votre prénom")
+	print("Veuillez entrer la premiere lettre de votre prénom")
 	global userName
-	userName= raw_input("") #getch.getch().decode('utf-8')
+	userName= key.queue.get() #raw_input("") #getch.getch().decode('utf-8')
 	userName=userName.lower()
 	print("Merci "+userName)
 	firstMenu()
@@ -83,7 +83,7 @@ def moreInformation():
 	print("")
 	print("0 pour retourner au menu principal")
 	print("1 pour quitter")
-	choice = getch.getch().decode('utf-8') 
+	choice = key.queue.get() # getch.getch().decode('utf-8')
 	if(choice=='0'):
 		firstMenu()
 	else :
@@ -101,25 +101,25 @@ def installationSuite(x,y):
 			print("")
 			print("0 pour la pin suivante")
 			print("1 pour retourner au menu principal")
-			choice = getch.getch().decode('utf-8') 
+			choice = key.queue.get() #getch.getch().decode('utf-8') 
 			motif[i][j]=0
 			if(choice=='1'):
 				firstMenu()
 	os.system('clear')
 	print("Vous etes arrivé à la fin de l'installation.")
 	print("Appuyer sur 0 pour retourner au menu principal")
-	choice = getch.getch().decode('utf-8') 
+	choice = key.queue.get() #getch.getch().decode('utf-8') 
 	firstMenu()
 def installation():
 	os.system('clear')
 	print("Bienvenue au programme d'installation du système")
 	print("Il permet de faciliter le branchement des cables")
 	print("Veuillez donner la largeur x de l'écran?")
-	x=int(getch.getch().decode('utf-8'))
+	x=int(key.queue.get()) #getch.getch().decode('utf-8'))
 	os.system('clear')
 	print("Ok, l'écran fait "+str(x)+" de large.")
 	print("Quelle est la hauteur y de l'écran?")
-	y=int(getch.getch().decode('utf-8'))
+	y=int(key.queue.get())#getch.getch().decode('utf-8'))
 	os.system('clear')
 	print("L'écran fait "+str(x)+" de large et "+str(y)+" de hauteur.")
 	print("Pour faciliter le branchement, chacune des sorties vont alterner entre 1 et 0 les unes après les autres.")
@@ -127,7 +127,7 @@ def installation():
 	print("0 pour commencer")
 	print("1 pour retourner au menu principal")
 	print("2 pour quitter")
-	choice = getch.getch().decode('utf-8') 
+	choice = key.queue.get()#getch.getch().decode('utf-8') 
 	if(choice=='0'):
 		installationSuite(x,y)
 	elif(choice=='1'):
@@ -143,7 +143,7 @@ def gameMenu():
 	print("2 pour des chiffres et pas de lettre")
 	print("3 pour retourner au menu principal")
 	print("4 pour quitter")
-	choice=getch.getch().decode('utf-8')
+	choice=key.queue.get()#getch.getch().decode('utf-8')
 	if(choice=='0'):
 		initGame(0)
 	elif(choice=='1'):
@@ -162,7 +162,7 @@ def firstMenu():
 	print ("1 pour jouer")
 	print ("2 pour le programme d'installation")
 	print ("3 pour quitter")
-	choice = getch.getch().decode('utf-8')
+	choice = key.queue.get() #getch.getch().decode('utf-8')
 	if(choice=='0'):
 		moreInformation()
 	elif(choice=='1'):
@@ -196,7 +196,7 @@ def initGame(game):
 	print("0 pour oui")
 	print("1 pour retourner au menu principal")
 	print("2 pour quitter")
-	choice = getch.getch().decode('utf-8') 
+	choice = key.queue.get() #getch.getch().decode('utf-8') 
 	if(choice=='0'):
 		gameLaunch(game)
 	elif(choice=='1'):
@@ -217,7 +217,7 @@ def sendDataToDisplay(motif,x,y,motifNb):
 				else:
 					motifF[z][i][j]=0
 	print(motifF)
-	test1Scalable.convertToHexa(motifF,x,y,motifNb)#ici les commentaires pour marcher sans rasberry
+	test1Scalable.convertToHexa(motifF,x,y,motifNb+1)#ici les commentaires pour marcher sans rasberry
 def displayNone():
 	x=4
 	y=4
@@ -395,7 +395,7 @@ def gameLaunch(game):
 			digit=random.randint(0,9)
 			digitDisplay(digit)
 		print(digit)
-		guess=getch.getch().decode('utf-8')
+		guess=key.queue.get() #getch.getch().decode('utf-8')
 		result=0
 		if(guess==str(digit)):
 			print("Well done")
@@ -417,7 +417,7 @@ def gameLaunch(game):
 	print("0 pour recommencer")
 	print("1 pour retourner au menu principal")
 	print("2 pour quitter")
-	choice = getch.getch().decode('utf-8') 
+	choice = key.queue.get() #getch.getch().decode('utf-8') 
 	if(choice=='0'):
 		gameLaunch(game)
 	elif(choice=='1'):
@@ -425,6 +425,7 @@ def gameLaunch(game):
 	else :
 		stopGame()
 login()
+
 
 
 
