@@ -6,7 +6,6 @@ from multiprocessing import Pool
 import time
 import datetime
 import random
-#import getch
 import sys
 import threading
 import os.path
@@ -28,11 +27,6 @@ def saveGame():
 	global statTime
 	global statGTime
 	global userName
-	# print(userName)
-	# print(stat)
-	# print(statG)
-	# print(statTime)
-	# print(statGTime)
 	indexS=0
 	contenu=[]
 	fileName="statFile.txt"
@@ -43,7 +37,6 @@ def saveGame():
 		theFile.close()
 		for i in range(len(contenu)):
 			if userName in contenu[i]:
-				#print("exist element "+str(i))
 				print(userName+", nous sommes heureux de votre retour sur l'application. Nous avons ajouté à votre profil des informations.")
 				indexS=i
 				existUser=1
@@ -61,7 +54,6 @@ def saveGame():
 
 	theFile=open(fileName,"w")
 	theFile.write('\n'.join(contenu))
-	#print(contenu)
 def stopGame():
 	os.system('clear')
 	print("Au revoir "+userName + " :)")
@@ -71,7 +63,7 @@ def stopGame():
 def login():
 	print("Veuillez entrer la premiere lettre de votre prénom")
 	global userName
-	userName= key.queue.get() #raw_input("") #getch.getch().decode('utf-8')
+	userName= key.queue.get() #raw_input("")#raw input ne fonctionne pas avec les threads
 	userName=userName.lower()
 	print("Merci "+userName)
 	firstMenu()
@@ -83,7 +75,7 @@ def moreInformation():
 	print("")
 	print("0 pour retourner au menu principal")
 	print("1 pour quitter")
-	choice = key.queue.get() # getch.getch().decode('utf-8')
+	choice = key.queue.get()
 	if(choice=='0'):
 		firstMenu()
 	else :
@@ -101,25 +93,25 @@ def installationSuite(x,y):
 			print("")
 			print("0 pour la pin suivante")
 			print("1 pour retourner au menu principal")
-			choice = key.queue.get() #getch.getch().decode('utf-8') 
+			choice = key.queue.get()
 			motif[i][j]=0
 			if(choice=='1'):
 				firstMenu()
 	os.system('clear')
 	print("Vous etes arrivé à la fin de l'installation.")
 	print("Appuyer sur 0 pour retourner au menu principal")
-	choice = key.queue.get() #getch.getch().decode('utf-8') 
+	choice = key.queue.get() 
 	firstMenu()
 def installation():
 	os.system('clear')
 	print("Bienvenue au programme d'installation du système")
 	print("Il permet de faciliter le branchement des cables")
 	print("Veuillez donner la largeur x de l'écran?")
-	x=int(key.queue.get()) #getch.getch().decode('utf-8'))
+	x=int(key.queue.get())
 	os.system('clear')
 	print("Ok, l'écran fait "+str(x)+" de large.")
 	print("Quelle est la hauteur y de l'écran?")
-	y=int(key.queue.get())#getch.getch().decode('utf-8'))
+	y=int(key.queue.get())
 	os.system('clear')
 	print("L'écran fait "+str(x)+" de large et "+str(y)+" de hauteur.")
 	print("Pour faciliter le branchement, chacune des sorties vont alterner entre 1 et 0 les unes après les autres.")
@@ -127,7 +119,7 @@ def installation():
 	print("0 pour commencer")
 	print("1 pour retourner au menu principal")
 	print("2 pour quitter")
-	choice = key.queue.get()#getch.getch().decode('utf-8') 
+	choice = key.queue.get()
 	if(choice=='0'):
 		installationSuite(x,y)
 	elif(choice=='1'):
@@ -143,7 +135,7 @@ def gameMenu():
 	print("2 pour des chiffres et pas de lettre")
 	print("3 pour retourner au menu principal")
 	print("4 pour quitter")
-	choice=key.queue.get()#getch.getch().decode('utf-8')
+	choice=key.queue.get()
 	if(choice=='0'):
 		initGame(0)
 	elif(choice=='1'):
@@ -155,14 +147,13 @@ def gameMenu():
 	else :
 		stopGame()
 def firstMenu():
-	#os.system('clear')
 	print (userName.capitalize()+", bienvenue sur le menu principal")
 	print ("choisisez :")
 	print ("0 pour en savoir plus sur le but des jeux")
 	print ("1 pour jouer")
 	print ("2 pour le programme d'installation")
 	print ("3 pour quitter")
-	choice = key.queue.get() #getch.getch().decode('utf-8')
+	choice = key.queue.get()
 	if(choice=='0'):
 		moreInformation()
 	elif(choice=='1'):
@@ -196,7 +187,7 @@ def initGame(game):
 	print("0 pour oui")
 	print("1 pour retourner au menu principal")
 	print("2 pour quitter")
-	choice = key.queue.get() #getch.getch().decode('utf-8') 
+	choice = key.queue.get()
 	if(choice=='0'):
 		gameLaunch(game)
 	elif(choice=='1'):
@@ -208,7 +199,6 @@ def sendDataToDisplay(motif,x,y,motifNb):
 	for z in range(motifNb+1):
 		for i in range(x):
 			for j in range(y):
-				# print("i="+str(i)+" j="+str(j)+" z="+str(z))
 				if z<motifNb:
 					if motifNb==1:
 						motifF[z][i][j]=motif[i][j]
@@ -216,7 +206,7 @@ def sendDataToDisplay(motif,x,y,motifNb):
 						motifF[z][i][j]=motif[z][i][j]
 				else:
 					motifF[z][i][j]=0
-	print(motifF)
+	#print(motifF)
 	test1Scalable.convertToHexa(motifF,x,y,motifNb+1)#ici les commentaires pour marcher sans rasberry
 def displayNone():
 	x=4
@@ -229,7 +219,6 @@ def mineDisplay(value):
 	motif=[[0 for i in range(x)] for j in range(y)]
 	value=value-1
 	val1=int((value-value%3)/3)
-	#print("value "+str(value)+" "+str(val1)+" "+str(value%3))
 	motif[val1][value%3]=1
 	sendDataToDisplay(motif,x,y,1)
 def guitarDisplay(value):
@@ -395,7 +384,7 @@ def gameLaunch(game):
 			digit=random.randint(0,9)
 			digitDisplay(digit)
 		print(digit)
-		guess=key.queue.get() #getch.getch().decode('utf-8')
+		guess=key.queue.get()
 		result=0
 		if(guess==str(digit)):
 			print("Well done")
@@ -417,7 +406,7 @@ def gameLaunch(game):
 	print("0 pour recommencer")
 	print("1 pour retourner au menu principal")
 	print("2 pour quitter")
-	choice = key.queue.get() #getch.getch().decode('utf-8') 
+	choice = key.queue.get()
 	if(choice=='0'):
 		gameLaunch(game)
 	elif(choice=='1'):
