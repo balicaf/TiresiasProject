@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 import time
 import threading
 import math
+import Queue
 
 SDI   = 26#or 26 red 21 green
 RCLK  = 20
@@ -18,6 +19,7 @@ nbMotif=2 #nombre de motif affichable
 motifV = [[[0 for i in range(x)] for j in range(y)]for z in range(nbMotif)] 
 motif = [[[0 for i in range(x)] for j in range(y)]for z in range(nbMotif)] 
 #motif=[[0]*8]*10 #dans les 10 elements de la premiere dimension sont toutes les shiftregister a afficher. L'autre dimension sert a afficher different motif
+queue = Queue.Queue()
 
 def nbShiftCalculate(x,y):
 	nbShift=int(math.ceil(x*y/8.0))
@@ -53,7 +55,7 @@ def convertToHexa(motifV,x1,y1,nbMotif1):
 			valeuraff=""
 			for testaff in range(0,nbShift):
 					valeuraff=valeuraff+","+str(motif[testaff1][testaff])
-			print(valeuraff)
+			#print(valeuraff)
 
 	#exemple de resultat
 	#motif[0]=[0xff,0xff] #8bit pour toutes les infos du shift
@@ -67,6 +69,8 @@ def convertToHexa(motifV,x1,y1,nbMotif1):
 
 	#motif[1][2]=0x00
 	#motif[1][3]=0x00
+	print ("motif", motif)
+	queue.put(motif)
 	return motif
 convertToHexa(motifV,x,y,nbMotif)
 #DataOutPut=[26,27,28,29,30,31,32,33,34,35]#liste des pin de data
@@ -115,51 +119,98 @@ def hc595_in(dat):
 		time.sleep(0.01)
 		GPIO.output(SRCLK, GPIO.HIGH)
 		time.sleep(0.01)
-def hc595_inCustom(idMotif):
+def hc595_inCustom(idMotif):#code mort
+        motif2 = queue.get()
+        #motif2 = queue.get()
+        #motif2 = queue.get()
+        #motif2 = queue.get()
+        print ("motif2 is ",motif2)
 	for bit in range(0,8):
 		for line in range(0,nbShift):
-			print("line",line)
-			print("idmotif",idMotif)
-			print(motif)
-			print(motif[idMotif][line])
+			#print("line",line)
+			#print("idmotif",idMotif)
+			#print(motif)
+			#print(motif[idMotif][line])
 			#GPIO.output(26, 0x80 & (1 << bit))
 			#GPIO.output(21, 0x80 & (1 << bit))
-			GPIO.output(DataOutPut[line], 0x80 & (motif[idMotif][line] << bit))
+			GPIO.output(DataOutPut[line], 0x80 & (motif2[idMotif][line] << bit))
 		GPIO.output(SRCLK, GPIO.LOW)
 		time.sleep(0.01)
 		GPIO.output(SRCLK, GPIO.HIGH)
 		time.sleep(0.01)
-def hc595_out():
+def hc595_out():#code mort
 	GPIO.output(RCLK, GPIO.LOW)
 	time.sleep(0.01)
 	#time.sleep(sleepInOut)
 	GPIO.output(RCLK, GPIO.HIGH)
 	time.sleep(0.01)
 
-def loop():
-	WhichLeds = LED0	# Change Mode, modes from LED0 to LED3
-	sleeptime = 0.5		# Change speed, lower value, faster speed
-	i = 0
-
-  def theLoop():
-		i=1
-	#while True:
-
-		#value = WhichLeds[i%len(WhichLeds)]
+def theLoop():
+        i=1
+        motif2 = [[0,0],[0xFF,0xFF]]
+        nbShift=2
+        while True:
+                #value = WhichLeds[i%len(WhichLeds)]
 		# hc595_in(value)
-		hc595_inCustom(i%nbMotif)
-		hc595_out()
-		#print 'update : ' + str(value)
-		print('Update mystere')
-		i += 1
-		#time.sleep(sleeptime)
-		threading.Timer(sleeptime,theLoop).start()
-	theLoop()
+		#motif3 = queue.get_nowait()
+		if queue.empty():
+                        pass
+                else:
+                        motif2 = queue.get()
+                        print ("motif2 is updated ",motif2)
+                #motif2 = [[0,0],[0,0]]
+		for bit in range(0,8):
+                        for line in range(0,nbShift):
+                                #print("line",line)
+				#print("idmotif",idMotif)
+				#print(motif)
+				#print(motif[idMotif][line])
+				#GPIO.output(26, 0x80 & (1 << bit))
+				#GPIO.output(21, 0x80 & (1 << bit))
+				GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
+			GPIO.output(SRCLK, GPIO.LOW)
+			time.sleep(0.01)
+			GPIO.output(SRCLK, GPIO.HIGH)
+			time.sleep(0.01)
+                GPIO.output(RCLK, GPIO.LOW)
+		time.sleep(0.01)
+		#time.sleep(sleepInOut)
+		GPIO.output(RCLK, GPIO.HIGH)
+		time.sleep(0.01)
+                i += 1
+                #print("i",i,"nbMotif",nbMotif,"i%nbMotif",i%nbMotif,"motif2 ",motif2[i%nbMotif])
+            #    hc595_inCustom(i%nbMotif)
+            #    hc595_out()
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                #print 'update : ' + str(value)
+                #print('Update mystere')
+               
+                #time.sleep(sleeptime)
+            
+        #theLoop()
 
 	#	for i in range(len(WhichLeds)-1, -1, -1):
 	#		hc595_in(WhichLeds[i])
 	#		hc595_out()
 	#		time.sleep(sleeptime)
+
+def loop():
+	WhichLeds = LED0	# Change Mode, modes from LED0 to LED3
+	sleeptime = 0.5		# Change speed, lower value, faster speed
+	i = 0
+        threading.Timer(sleeptime,theLoop).start()
+
 
 def destroy():   # When program ending, the function is executed.
 	for pinSortie in range(0,len(DataOutPut)):
@@ -174,4 +225,5 @@ def mainFunction():
 	print_msg()
 	setup()
 	loop()
+
 
