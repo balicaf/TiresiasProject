@@ -6,7 +6,7 @@ import threading
 import math
 import Queue
 
-SDI   = 26#or 26 red 21 green
+#SDI   = 26#or 26 red 21 green
 RCLK  = 20
 SRCLK = 16
 sleepInOut=0.5
@@ -15,16 +15,17 @@ x = 4 #Largeur de l'ecran
 y = 4 #hauteur de l'ecran
 nbMotif=2 #nombre de motif affichable
 
-motifV = [[[0 for i in range(x)] for j in range(y)]for z in range(nbMotif)] 
-motif = [[[0 for i in range(x)] for j in range(y)]for z in range(nbMotif)] 
+#motifV = [[[0 for i in range(x)] for j in range(y)]for z in range(nbMotif)] 
+#motif = [[[0 for i in range(x)] for j in range(y)]for z in range(nbMotif)] 
 #motif=[[0]*8]*10 #dans les 10 elements de la premiere dimension sont toutes les shiftregister a afficher. L'autre dimension sert a afficher different motif
 queue = Queue.Queue()
 
 def nbShiftCalculate(x,y):
+	global nbShift
 	nbShift=int(math.ceil(x*y/8.0))
 	print("nbShift"+str(nbShift))
 	return nbShift
-nbShift=nbShiftCalculate(x,y)
+
 def convertToHexa(motifV,x1,y1,nbMotif1):
 	global x
 	global y
@@ -63,28 +64,24 @@ def convertToHexa(motifV,x1,y1,nbMotif1):
 	print ("motif", motif)
 	queue.put(motif)
 	return motif
-convertToHexa(motifV,x,y,nbMotif)
-#DataOutPut=[26,27,28,29,30,31,32,33,34,35]#liste des pin de data
 
-DataOutPut=[26,21]#liste des pin de data
-def print_msg():
-	print('Program is running...')
-	print('Please press Ctrl+C to end the program...')
-
+DataOutPut=[26,21]#liste des pin de data, ajout d element pour plus de shift
 def setup():
 	GPIO.setmode(GPIO.BCM)    # Number GPIOs by its physical location
-	for pinSortie in range(0,len(DataOutPut)):
+	for pinSortie in range(0,len(DataOutPut)): 
 		GPIO.setup(DataOutPut[pinSortie], GPIO.OUT)
+		print("pinSortie",pinSortie,"=",DataOutPut[pinSortie])
 	GPIO.setup(RCLK, GPIO.OUT)
 	GPIO.setup(SRCLK, GPIO.OUT)
 	
-	GPIO.output(SDI, GPIO.LOW)
+	for pinSortie in range(0,len(DataOutPut)): 
+		GPIO.output(DataOutPut[pinSortie], GPIO.LOW)
 	GPIO.output(RCLK, GPIO.LOW)
 	GPIO.output(SRCLK, GPIO.LOW)
 
 def theLoop():
         i=1
-        motif2 = [[0,0],[0,0]]
+        motif2 = [[0x00,0x00],[0x02,0x02]]
         nbShift=2
         while True:
 		if queue.empty():
@@ -95,6 +92,7 @@ def theLoop():
 		for bit in range(0,8):
                         for line in range(0,nbShift):
 				GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
+				print("bit",bit,"val",motif2[i%nbMotif][line],"tt",0x80 & (motif2[i%nbMotif][line] << bit),"pin",DataOutPut[line])
 			GPIO.output(SRCLK, GPIO.LOW)
 			time.sleep(0.01)
 			GPIO.output(SRCLK, GPIO.HIGH)
@@ -102,17 +100,13 @@ def theLoop():
                 GPIO.output(RCLK, GPIO.LOW)
 		time.sleep(0.01)
 		GPIO.output(RCLK, GPIO.HIGH)
+		print("signal send",motif2)
 		time.sleep(0.01)
                 i += 1  
                 time.sleep(0.5)
-def loop():
-	sleeptime = 0.5		# Change speed, lower value, faster speed
-	i = 0
-	#theLoop()
-        threading.Timer(sleeptime,theLoop).start()
-
 
 def destroy():   # When program ending, the function is executed.
+        print "destroy"
 	for pinSortie in range(0,len(DataOutPut)):
 		GPIO.output(DataOutPut[pinSortie], GPIO.LOW)
 	GPIO.output(SDI, GPIO.LOW)
@@ -122,8 +116,10 @@ def destroy():   # When program ending, the function is executed.
 	raise SystemExit
 def mainFunction():
 	GPIO.cleanup()
-	print_msg()
 	setup()
-	loop()
-#mainFunction()#pour faire tourner uniquement ce fichier
+	threading.Timer(0.5,theLoop).start()
 
+mainFunction()#pour faire tourner uniquement ce fichier
+#setup()
+#destroy()
+#theLoop()
