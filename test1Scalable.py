@@ -20,17 +20,23 @@ nbMotif=2 #nombre de motif affichable
 #motif=[[0]*8]*10 #dans les 10 elements de la premiere dimension sont toutes les shiftregister a afficher. L'autre dimension sert a afficher different motif
 queue = Queue.Queue()
 
+frequence=0.5
+sleeptime=0.5
 def nbShiftCalculate(x,y):
 	global nbShift
 	nbShift=int(math.ceil(x*y/8.0))
 	print("nbShift"+str(nbShift))
 	return nbShift
 
-def convertToHexa(motifV,x1,y1,nbMotif1):
+def convertToHexa(motifV,x1,y1,nbMotif1,frequence1,sleeptime1):
 	global x
 	global y
 	global nbMotif
 	global nbShift
+	global frequence
+	global sleeptime
+	frequence=frequence1
+	sleeptime=sleeptime1
 	x=x1
 	y=y1
 	nbMotif=nbMotif1
@@ -80,33 +86,36 @@ def setup():
 	GPIO.output(SRCLK, GPIO.LOW)
 
 def theLoop():
-        i=1
-        motif2 = [[0x00,0x00],[0x02,0x02]]
-        nbShift=2
-        while True:
+		i=1
+		motif2 = [[0x00,0x00],[0x02,0x02]]
+		nbShift=2
+		while True:
 		if queue.empty():
-                        pass
-                else:
-                        motif2 = queue.get()
-                        print ("motif2 is updated ",motif2)
+						pass
+				else:
+						motif2 = queue.get()
+						print ("motif2 is updated ",motif2)
 		for bit in range(0,8):
-                        for line in range(0,nbShift):
+						for line in range(0,nbShift):
 				GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
 				print("bit",bit,"val",motif2[i%nbMotif][line],"tt",0x80 & (motif2[i%nbMotif][line] << bit),"pin",DataOutPut[line])
 			GPIO.output(SRCLK, GPIO.LOW)
 			time.sleep(0.01)
 			GPIO.output(SRCLK, GPIO.HIGH)
 			time.sleep(0.01)
-                GPIO.output(RCLK, GPIO.LOW)
+				GPIO.output(RCLK, GPIO.LOW)
 		time.sleep(0.01)
 		GPIO.output(RCLK, GPIO.HIGH)
 		print("signal send",motif2)
 		time.sleep(0.01)
-                i += 1  
-                time.sleep(0.5)
+		waitingDelay=sleeptime
+		if(i%nbMotif==0):
+			waitingDelay=frequence
+		i += 1  
+		time.sleep(waitingDelay)
 
 def destroy():   # When program ending, the function is executed.
-        print "destroy"
+		print "destroy"
 	for pinSortie in range(0,len(DataOutPut)):
 		GPIO.output(DataOutPut[pinSortie], GPIO.LOW)
 	GPIO.output(SDI, GPIO.LOW)
