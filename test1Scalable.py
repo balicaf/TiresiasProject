@@ -28,7 +28,7 @@ def nbShiftCalculate(x,y):
 	print("nbShift"+str(nbShift))
 	return nbShift
 
-def convertToHexa(motifV,x1,y1,nbMotif1,frequence1,sleeptime1):
+def convertToHexa(motifV,x1,y1,nbMotif1,frequence1=0.5,sleeptime1=0.5):
 	global x
 	global y
 	global nbMotif
