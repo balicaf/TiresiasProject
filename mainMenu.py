@@ -194,7 +194,7 @@ def initGame(game):
 		firstMenu()
 	else :
 		stopGame()
-def sendDataToDisplay(motif,x,y,motifNb):
+def sendDataToDisplay(motif,x,y,motifNb,frequence=0.5,sleeptime=0.5):
 	motifF=[[[0 for i in range(x)] for j in range(y)]for z in range(motifNb+1)]
 	for z in range(motifNb+1):
 		for i in range(x):
@@ -207,7 +207,7 @@ def sendDataToDisplay(motif,x,y,motifNb):
 				else:
 					motifF[z][i][j]=0
 	#print(motifF)
-	test1Scalable.convertToHexa(motifF,x,y,motifNb+1)#ici les commentaires pour marcher sans rasberry
+	test1Scalable.convertToHexa(motifF,x,y,motifNb+1,frequence,sleeptime)#ici les commentaires pour marcher sans rasberry
 def displayNone():
 	x=4
 	y=4
@@ -224,7 +224,7 @@ def mineDisplay(value):
 def guitarDisplay(value):
 	x=4
 	y=4
-	nbMotif=4
+	nbMotif=7
 	motifS=[[[0 for i in range(x)] for j in range(y)]for z in range(nbMotif)] 
 	if value==2:
 		motifS[0]=[[1, 1, 1, 1], 
@@ -294,7 +294,7 @@ def guitarDisplay(value):
 		 [0, 0, 0, 0], 
 		 [0, 0, 0, 0], 
 		 [0, 0, 0, 0]]
-	sendDataToDisplay(motifS,x,y,nbMotif)
+	sendDataToDisplay(motifS,x,y,nbMotif,0.1,0.5)
 def digitDisplay(value):
 	x=4
 	y=4
