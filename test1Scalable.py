@@ -46,21 +46,21 @@ def convertToHexa(motifV,x1,y1,nbMotif1,frequence1=0.5,sleeptime1=0.5):
 	shiftNumber=0
 	shiftCpt=0 #max 8 car un shift ne peux pas aller plus loin
 	for motifCpt in range(0,nbMotif):
-			shiftNumber=0
-			shiftCpt=0
-			for absc in range(0,x):
-					for ordo in range(0,y):
-							if(shiftCpt>7):
-									shiftCpt=0
-									shiftNumber=shiftNumber+1
-							valeur=motifV[motifCpt][absc][ordo]<<shiftCpt
-							#print(str(motifCpt)+","+str(shiftNumber))
-							motif[motifCpt][shiftNumber]=motif[motifCpt][shiftNumber] | valeur
-							shiftCpt=shiftCpt+1
+		shiftNumber=0
+		shiftCpt=0
+		for absc in range(0,x):
+			for ordo in range(0,y):
+				if(shiftCpt>7):
+					shiftCpt=0
+					shiftNumber=shiftNumber+1
+				valeur=motifV[motifCpt][absc][ordo]<<shiftCpt
+				#print(str(motifCpt)+","+str(shiftNumber))
+				motif[motifCpt][shiftNumber]=motif[motifCpt][shiftNumber] | valeur
+				shiftCpt=shiftCpt+1
 	for testaff1 in range(0,nbMotif):
-			valeuraff=""
-			for testaff in range(0,nbShift):
-					valeuraff=valeuraff+","+str(motif[testaff1][testaff])
+		valeuraff=""
+		for testaff in range(0,nbShift):
+			valeuraff=valeuraff+","+str(motif[testaff1][testaff])
 
 	#exemple de resultat
 	#motif[0]=[0x00,0x00] #8bit pour toutes les infos du shift
@@ -86,33 +86,33 @@ def setup():
 	GPIO.output(SRCLK, GPIO.LOW)
 
 def theLoop():
-		i=1
-		motif2 = [[0x00,0x00],[0x02,0x02]]
-		nbShift=2
-		while True:
-						if queue.empty():
-								pass
-						else:
-								motif2 = queue.get()
-								#print ("motif2 is updated ",motif2)
-		for bit in range(0,8):
-			for line in range(0,nbShift):
-				GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
-				#print("bit",bit,"val",motif2[i%nbMotif][line],"tt",0x80 & (motif2[i%nbMotif][line] << bit),"pin",DataOutPut[line])
-			GPIO.output(SRCLK, GPIO.LOW)
-			time.sleep(0.01)
-			GPIO.output(SRCLK, GPIO.HIGH)
-			time.sleep(0.01)
-			GPIO.output(RCLK, GPIO.LOW)
+	i=1
+	motif2 = [[0x00,0x00],[0x02,0x02]]
+	nbShift=2
+	while True:
+		if queue.empty():
+			pass
+		else:
+			motif2 = queue.get()
+			#print ("motif2 is updated ",motif2)
+	for bit in range(0,8):
+		for line in range(0,nbShift):
+			GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
+			#print("bit",bit,"val",motif2[i%nbMotif][line],"tt",0x80 & (motif2[i%nbMotif][line] << bit),"pin",DataOutPut[line])
+		GPIO.output(SRCLK, GPIO.LOW)
 		time.sleep(0.01)
-		GPIO.output(RCLK, GPIO.HIGH)
-		#print("signal send",motif2)
+		GPIO.output(SRCLK, GPIO.HIGH)
 		time.sleep(0.01)
-		waitingDelay=sleeptime
-		if(i%nbMotif==0):
-			waitingDelay=frequence
-		i += 1  
-		time.sleep(waitingDelay)
+		GPIO.output(RCLK, GPIO.LOW)
+	time.sleep(0.01)
+	GPIO.output(RCLK, GPIO.HIGH)
+	#print("signal send",motif2)
+	time.sleep(0.01)
+	waitingDelay=sleeptime
+	if(i%nbMotif==0):
+		waitingDelay=frequence
+	i += 1  
+	time.sleep(waitingDelay)
 
 def destroy():   # When program ending, the function is executed.
 	print "destroy"
