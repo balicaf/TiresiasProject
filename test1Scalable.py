@@ -87,7 +87,7 @@ def setup():
 
 def theLoop():
 	i=1
-	motif2 = [[0x00,0x00],[0x02,0x02]]
+	motif2 = [[0x00,0x00],[0xff,0xff]]
 	nbShift=2
 	while True:
 		if queue.empty():
@@ -128,7 +128,7 @@ def mainFunction():
 	setup()
 	threading.Timer(0.5,theLoop).start()
 
-#mainFunction()#pour faire tourner uniquement ce fichier
+mainFunction()#pour faire tourner uniquement ce fichier
 #setup()
 #destroy()
 #theLoop()
