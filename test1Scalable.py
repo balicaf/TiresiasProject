@@ -95,24 +95,24 @@ def theLoop():
 		else:
 			motif2 = queue.get()
 			#print ("motif2 is updated ",motif2)
-	for bit in range(0,8):
-		for line in range(0,nbShift):
-			GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
-			#print("bit",bit,"val",motif2[i%nbMotif][line],"tt",0x80 & (motif2[i%nbMotif][line] << bit),"pin",DataOutPut[line])
-		GPIO.output(SRCLK, GPIO.LOW)
+		for bit in range(0,8):
+			for line in range(0,nbShift):
+				GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
+				#print("bit",bit,"val",motif2[i%nbMotif][line],"tt",0x80 & (motif2[i%nbMotif][line] << bit),"pin",DataOutPut[line])
+			GPIO.output(SRCLK, GPIO.LOW)
+			time.sleep(0.01)
+			GPIO.output(SRCLK, GPIO.HIGH)
+			time.sleep(0.01)
+			GPIO.output(RCLK, GPIO.LOW)
 		time.sleep(0.01)
-		GPIO.output(SRCLK, GPIO.HIGH)
+		GPIO.output(RCLK, GPIO.HIGH)
+		#print("signal send",motif2)
 		time.sleep(0.01)
-		GPIO.output(RCLK, GPIO.LOW)
-	time.sleep(0.01)
-	GPIO.output(RCLK, GPIO.HIGH)
-	#print("signal send",motif2)
-	time.sleep(0.01)
-	waitingDelay=sleeptime
-	if(i%nbMotif==0):
-		waitingDelay=frequence
-	i += 1  
-	time.sleep(waitingDelay)
+		waitingDelay=sleeptime
+		if(i%nbMotif==0):
+			waitingDelay=frequence
+		i += 1  
+		time.sleep(waitingDelay)
 
 def destroy():   # When program ending, the function is executed.
 	print "destroy"
