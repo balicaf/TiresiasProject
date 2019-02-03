@@ -118,7 +118,6 @@ def destroy():   # When program ending, the function is executed.
 	print "destroy"
 	for pinSortie in range(0,len(DataOutPut)):
 		GPIO.output(DataOutPut[pinSortie], GPIO.LOW)
-	GPIO.output(SDI, GPIO.LOW)
 	GPIO.output(RCLK, GPIO.LOW)
 	GPIO.output(SRCLK, GPIO.LOW)
 	GPIO.cleanup()
