@@ -90,11 +90,11 @@ def theLoop():
 		motif2 = [[0x00,0x00],[0x02,0x02]]
 		nbShift=2
 		while True:
-                        if queue.empty():
-                                pass
-                        else:
-                                motif2 = queue.get()
-                                #print ("motif2 is updated ",motif2)
+						if queue.empty():
+								pass
+						else:
+								motif2 = queue.get()
+								#print ("motif2 is updated ",motif2)
 		for bit in range(0,8):
 			for line in range(0,nbShift):
 				GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
