@@ -415,6 +415,3 @@ def gameLaunch(game):
 		stopGame()
 login()
 
-
-
-
