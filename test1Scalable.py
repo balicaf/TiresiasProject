@@ -25,7 +25,7 @@ sleeptime=0.5
 def nbShiftCalculate(x,y):
 	global nbShift
 	nbShift=int(math.ceil(x*y/8.0))
-	print("nbShift"+str(nbShift))
+	#print("nbShift"+str(nbShift))
 	return nbShift
 
 def convertToHexa(motifV,x1,y1,nbMotif1,frequence1=0.5,sleeptime1=0.5):
@@ -67,7 +67,7 @@ def convertToHexa(motifV,x1,y1,nbMotif1,frequence1=0.5,sleeptime1=0.5):
 	#motif[1]=[0x00,0x00]
 	#motif[2]=[0xf0,0xf0]
 	#motif[3]=[0x0f,0x0f]
-	print ("motif", motif)
+	#print ("motif", motif)
 	queue.put(motif)
 	return motif
 
@@ -90,23 +90,23 @@ def theLoop():
 		motif2 = [[0x00,0x00],[0x02,0x02]]
 		nbShift=2
 		while True:
-		if queue.empty():
-						pass
-				else:
-						motif2 = queue.get()
-						print ("motif2 is updated ",motif2)
+                        if queue.empty():
+                                pass
+                        else:
+                                motif2 = queue.get()
+                                #print ("motif2 is updated ",motif2)
 		for bit in range(0,8):
-						for line in range(0,nbShift):
+			for line in range(0,nbShift):
 				GPIO.output(DataOutPut[line], 0x80 & (motif2[i%nbMotif][line] << bit))
-				print("bit",bit,"val",motif2[i%nbMotif][line],"tt",0x80 & (motif2[i%nbMotif][line] << bit),"pin",DataOutPut[line])
+				#print("bit",bit,"val",motif2[i%nbMotif][line],"tt",0x80 & (motif2[i%nbMotif][line] << bit),"pin",DataOutPut[line])
 			GPIO.output(SRCLK, GPIO.LOW)
 			time.sleep(0.01)
 			GPIO.output(SRCLK, GPIO.HIGH)
 			time.sleep(0.01)
-				GPIO.output(RCLK, GPIO.LOW)
+			GPIO.output(RCLK, GPIO.LOW)
 		time.sleep(0.01)
 		GPIO.output(RCLK, GPIO.HIGH)
-		print("signal send",motif2)
+		#print("signal send",motif2)
 		time.sleep(0.01)
 		waitingDelay=sleeptime
 		if(i%nbMotif==0):
@@ -115,7 +115,7 @@ def theLoop():
 		time.sleep(waitingDelay)
 
 def destroy():   # When program ending, the function is executed.
-		print "destroy"
+	print "destroy"
 	for pinSortie in range(0,len(DataOutPut)):
 		GPIO.output(DataOutPut[pinSortie], GPIO.LOW)
 	GPIO.output(SDI, GPIO.LOW)
@@ -128,7 +128,8 @@ def mainFunction():
 	setup()
 	threading.Timer(0.5,theLoop).start()
 
-mainFunction()#pour faire tourner uniquement ce fichier
+#mainFunction()#pour faire tourner uniquement ce fichier
 #setup()
 #destroy()
 #theLoop()
+
