@@ -18,23 +18,13 @@ def listen(key,q):
     print "exit loop"
     q.put(None)
 
-
-def test():
-    while(True):
-        print ("test dectect :",queue.get())
-        #time.sleep(0.5)
-
 def startKeyboard():
     threads = [Thread(target=listen, kwargs={"key":key,"q":queue}) for key in keys]
     for thread in threads:
         thread.start()
 
 queue = Queue.Queue()
-#creation d'un threath qui reccupere les donnée pour la demonstration
-tests = Thread(name='test', target=test)#, args=queue)
 threads = [Thread(target=listen, kwargs={"key":key,"q":queue}) for key in keys]
-
-tests.start()
 startKeyboard()
 
 
