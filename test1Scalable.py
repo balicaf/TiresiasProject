@@ -13,7 +13,7 @@ sleepInOut=0.5
 
 x = 4 #Largeur de l'ecran
 y = 4 #hauteur de l'ecran
-motif0= [[0x00,0x00],[0x01,0x01]]
+motif0= [[0x00,0x00],[0x01,0x01],[0x02,0x02],[0x04,0x04],[0x08,0x08],[0x10,0x10],[0x20,0x20],[0x40,0x40],[0x80,0x80],]
 nbMotif=len(motif0) #nombre de motif affichable
 nbShift=0
 queue = Queue.Queue()
@@ -131,7 +131,7 @@ def mainFunction():
 	setup()
 	threading.Timer(0.5,theLoop).start()
 
-#mainFunction()#pour faire tourner uniquement ce fichier
+mainFunction()#pour faire tourner uniquement ce fichier
 #setup()
 #destroy()
 #theLoop()
