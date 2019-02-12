@@ -1,4 +1,4 @@
-import Queue
+import queue as Queue
 import keyboard
 import string
 import time
@@ -13,9 +13,9 @@ def listen(key,q):
     while True:
         keyboard.wait(key)
         a = key
-        print "listen : ",a
+        print ("listen : ",a)
         q.put(a)
-    print "exit loop"
+    print ("exit loop")
     q.put(None)
 
 def startKeyboard():

@@ -56,22 +56,22 @@ def saveGame():
 	theFile=open(fileName,"w")
 	theFile.write('\n'.join(contenu))
 	stat=["","",""]
-        statG=""
-        statTime=["","",""]
-        statGTime=""
-        time.sleep(1)
+	statG=""
+	statTime=["","",""]
+	statGTime=""
+	time.sleep(1)
 def stopGame():
-        global gameStop
-        if gameStop==0:
-                gameStop=1
-                os.system('clear')
-                print("Au revoir "+userName + " :)")
-                saveGame()
-                time.sleep(3)
-                test1Scalable.destroy()
-                exit()
-        else:
-                print("Bug possible")
+	global gameStop
+	if gameStop==0:
+		gameStop=1
+		os.system('clear')
+		print("Au revoir "+userName + " :)")
+		saveGame()
+		time.sleep(3)
+		test1Scalable.destroy()
+		exit()
+	else:
+		print("Bug possible")
 def login():
 	print("Veuillez entrer la premiere lettre de votre prénom")
 	global userName
@@ -159,12 +159,12 @@ def gameMenu():
 	elif(choice=='3'):
 		firstMenu()
 	elif(choice=='4') :
-                saveGame()
-                gameMenu()
-        else:
+		saveGame()
+		gameMenu()
+	else:
 		stopGame()
 def firstMenu():
-        os.system('clear')
+	os.system('clear')
 	print (userName.capitalize()+", bienvenue sur le menu principal")
 	print ("choisisez :")
 	print ("0 pour en savoir plus sur le but des jeux")
@@ -180,8 +180,8 @@ def firstMenu():
 	elif(choice=='2'):
 		installation()
 	elif(choice=='3') :
-                saveGame()
-                gameMenu()
+		saveGame()
+		gameMenu()
 	else :
 		stopGame()
 

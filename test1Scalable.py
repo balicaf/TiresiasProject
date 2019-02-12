@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 import time
 import threading
 import math
-import Queue
+import queue as Queue
 
 #SDI   = 26#or 26 red 21 green
 RCLK  = 20
@@ -13,7 +13,7 @@ sleepInOut=0.5
 
 x = 4 #Largeur de l'ecran
 y = 4 #hauteur de l'ecran
-motif0= [[0x00,0x00],[0x01,0x01],[0x02,0x02],[0x04,0x04],[0x08,0x08],[0x10,0x10],[0x20,0x20],[0x40,0x40],[0x80,0x80],]
+motif0= [[0x00,0x00],[0x01,0x01]]
 nbMotif=len(motif0) #nombre de motif affichable
 nbShift=0
 queue = Queue.Queue()
@@ -118,7 +118,7 @@ def theLoop():
 		#print("Loop fin")
 
 def destroy():   # When program ending, the function is executed.
-	print "destroy"
+	print ("destroy")
 	for pinSortie in range(0,len(DataOutPut)):
 		GPIO.output(DataOutPut[pinSortie], GPIO.LOW)
 	#GPIO.output(SDI, GPIO.LOW)
@@ -131,7 +131,7 @@ def mainFunction():
 	setup()
 	threading.Timer(0.5,theLoop).start()
 
-mainFunction()#pour faire tourner uniquement ce fichier
+##mainFunction()#pour faire tourner uniquement ce fichier
 #setup()
 #destroy()
 #theLoop()
