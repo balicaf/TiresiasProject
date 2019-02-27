@@ -25,19 +25,15 @@ gameStop=0
 hack=0
 def convertMap(motif,x,y):
 	motif1=[[[0 for i in range(x)] for j in range(y)]for z in range(len(motif))]
-	convertT=[[0,1,2,3],
-			  [4,5,6,7],
-			  [8,9,10,11],
-			  [12,13,14,15]]
-	for z in len(motif):
+	convertT=[[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15]]
+	for z in range(len(motif)):
 		for i in range(x):
 			for j in range(y):
-				xy=convertT[x][y]
+				xy=convertT[i][j]
 				x1=int((xy-xy%x)/x)
 				y1=xy%x
-				motif1[z][x1][y1]=motif[z][x][y]
+				motif1[z][x1][y1]=motif[z][i][j]
 	return motif1 
-
 def saveGame():
 	global stat
 	global statG
@@ -54,12 +50,12 @@ def saveGame():
 		theFile.close()
 		for i in range(len(contenu)):
 			if userName in contenu[i]:
-				print(userName+", nous sommes heureux de votre retour sur l'application. Nous avons ajout??votre profil des informations.")
+				print(userName+", nous sommes heureux de votre retour sur l'application. Nous avons ajouté votre profil des informations.")
 				indexS=i
 				existUser=1
 			contenu[i]=contenu[i].replace("\n","")
 	if existUser==0:
-		print(userName+" Nous avons cr? votre sauvegarde, elle permet de suivre votre ?olution pour am?iorer notre dispositif")
+		print(userName+" Nous avons créé votre sauvegarde, elle permet de suivre votre ?olution pour améliorer notre dispositif")
 		indexS=len(contenu)
 		contenu.extend([userName,"0","0","0","0","0","0","0","0"])
 	for i in range(3):
@@ -90,7 +86,7 @@ def stopGame():
 		print("Bug possible")
 def hackSetting():
 	os.system('clear')
-	print("Voulez vous afficher les r?ultats ?p???(triche)")
+	print("Voulez vous afficher les réultats attendu(triche)")
 	print("0 pour oui(triche)")
 	print("1 pour non")
 	choice = key.queue.get()
@@ -100,7 +96,7 @@ def hackSetting():
 		hack=0
 def login():
 	hackSetting()
-	print("Veuillez entrer la premiere lettre de votre pr?om")
+	print("Veuillez entrer la premiere lettre de votre prénom")
 	global userName
 	userName= key.queue.get() #raw_input("")#raw input ne fonctionne pas avec les threads
 	userName=userName.lower()
@@ -109,9 +105,9 @@ def login():
 	firstMenu()
 def moreInformation():
 	os.system('clear')
-	print("Les differents jeux on pour objectif d'?aluer les limites du prototype, les am?iorations ?faire pour la prochaine version.")
-	print("D'?aluer l'apprentissage de differents utilisateurs avec un outil de statistique. Suivre des utilisateurs sur differentes seance d'apprentissage.")
-	print("De voir les limites sur les differents jeux repr?entant 3 perceptions differentes. La perception de la localisation, des mouvements et des motifs.")
+	print("Les differents jeux on pour objectif d'évaluer les limites du prototype, les améliorations à faire pour la prochaine version.")
+	print("D'évaluer l'apprentissage de differents utilisateurs avec un outil de statistique. Suivre des utilisateurs sur differentes seance d'apprentissage.")
+	print("De voir les limites sur les differents jeux représentant 3 perceptions differentes. La perception de la localisation, des mouvements et des motifs.")
 	print("")
 	print("0 pour retourner au menu principal")
 	print("1 pour quitter")
@@ -126,8 +122,8 @@ def installationSuite(x,y):
 		for i in range(0,x):
 			motif[i][j]=1
 			os.system('clear')
-			print("La pin "+str(j*x+i)+" se met ?clignoter")
-			print("La pin aux coordonn?s: x="+str(i)+" y="+str(j))
+			print("La pin "+str(j*x+i)+" se met à clignoter")
+			print("La pin aux coordonnées: x="+str(i)+" y="+str(j))
 			print(",",motif)
 			sendDataToDisplay(motif,x,y,0)
 			print("")
@@ -138,23 +134,23 @@ def installationSuite(x,y):
 			if(choice=='1'):
 				firstMenu()
 	os.system('clear')
-	print("Vous etes arriv??la fin de l'installation.")
+	print("Vous etes arrivé à la fin de l'installation.")
 	print("Appuyer sur 0 pour retourner au menu principal")
 	choice = key.queue.get() 
 	firstMenu()
 def installation():
 	os.system('clear')
-	print("Bienvenue au programme d'installation du syst?e")
+	print("Bienvenue au programme d'installation du système")
 	print("Il permet de faciliter le branchement des cables")
-	print("Veuillez donner la largeur x de l'?ran?")
+	print("Veuillez donner la largeur x de l'écran?")
 	x=int(key.queue.get())
 	os.system('clear')
-	print("Ok, l'?ran fait "+str(x)+" de large.")
-	print("Quelle est la hauteur y de l'?ran?")
+	print("Ok, l'écran fait "+str(x)+" de large.")
+	print("Quelle est la hauteur y de l'écran?")
 	y=int(key.queue.get())
 	os.system('clear')
-	print("L'?ran fait "+str(x)+" de large et "+str(y)+" de hauteur.")
-	print("Pour faciliter le branchement, chacune des sorties vont alterner entre 1 et 0 les unes apr? les autres.")
+	print("L'écran fait "+str(x)+" de large et "+str(y)+" de hauteur.")
+	print("Pour faciliter le branchement, chacune des sorties vont alterner entre 1 et 0 les unes aprés les autres.")
 	print("Choisisez :")
 	print("0 pour commencer")
 	print("1 pour retourner au menu principal")
@@ -170,7 +166,7 @@ def gameMenu():
 	displayNone()
 	os.system('clear')
 	print("choisisez votre jeu :")
-	print("0 pour d?ineur")
+	print("0 pour démineur")
 	print("1 pour guitar hero")
 	print("2 pour des chiffres et pas de lettre")
 	print("3 pour retourner au menu principal")
@@ -218,21 +214,21 @@ def firstMenu():
 def initGame(game):
 	os.system('clear')
 	if(game==0):
-		print("Bienvenue au jeu de d?ineur")
-		print("10 bombes vont apparaitre les unes ?apr? les autres.")
-		print("Vous devrez dire ?quelles coordonne?s elles se trouvent avec le pav?num?ique")
-		print("Vous serez not?sur le temps pour localiser les 10 bombes et le nombre de bombe d?in?)
+		print("Bienvenue au jeu de démineur")
+		print("10 bombes vont apparaitre les unes après les autres.")
+		print("Vous devrez dire à quelles coordonne?s elles se trouvent avec le pavé numérique")
+		print("Vous serez noté sur le temps pour localiser les 10 bombes et le nombre de bombe déminée")
 	elif(game==1):
-		print("Bienvenue au jeu de guitar h?o (jeu non officiel inspirant le jeu Guitar Hero")
-		print("Vous allez avoir 10 motifs qui vont etre dessin?sur votre peau.")
-		print("Si vous sentez un balayage vers la gauche appuyer sur 6(touche de gauche du pav?num?ique")
+		print("Bienvenue au jeu de guitar héro (jeu non officiel inspirant le jeu Guitar Hero")
+		print("Vous allez avoir 10 mouvements qui vont etre dessiné sur votre peau.")
+		print("Si vous sentez un balayage vers la gauche appuyer sur 6(touche de gauche du pavé numérique")
 		print("Pour la droite 4, pour le haut 8, pour le bas 2")
-		print("Vous serez not?sur le temps pour suivre la partition et le nombre de note respect?)
+		print("Vous serez noté sur le temps pour suivre la partition et le nombre de note respect?")
 	elif(game==2):
 		print("Bienvenue au jeu des chiffres et pas de lettre")
-		print("L'objectif du jeu et de reconnaitre les chiffres qui seront dessin?sur votre bras")
-		print("Les chiffres seront afficher au hasard et vous le saisirez sur le pav?num?ique")
-		print("Vous serez not?sur le temps pour reconnaitre les 10 chiffres et le nombre de r?ssite")
+		print("L'objectif du jeu et de reconnaitre les chiffres qui seront dessinés sur votre bras")
+		print("Les chiffres seront afficher au hasard et vous le saisirez sur le pavé numérique")
+		print("Vous serez noté sur le temps pour reconnaitre les 10 chiffres et le nombre de réussite")
 
 	print("")
 	print("Etes vous pret?")
@@ -264,7 +260,6 @@ def sendDataToDisplay(motif1,x,y,motifMult=1,frequence=0.5,sleeptime=0.5):
 						motifF[z][i][j]=motif1[z][i][j]
 				else:
 					motifF[z][i][j]=0
-	#print(motifF)
 	motifF=convertMap(motifF,x,y)
 	test1Scalable.convertToHexa(motifF,x,y,frequence,sleeptime)#ici les commentaires pour marcher sans rasberry
 def displayNone():
@@ -423,9 +418,9 @@ def gameLaunch(game):
 	for i in range(0,10):
 		oldTime=time.time()
 		timeSpend=int(oldTime-debut)
-		print("Score = "+str(score)+"/"+str(i)+" Temps ecoul?: "+str(timeSpend))
+		print("Score = "+str(score)+"/"+str(i)+" Temps ecoulé: "+str(timeSpend))
 		if(game==0):
-			print("O? se trouve la bombe?")
+			print("Où se trouve la bombe?")
 			digit=random.randint(1,9)
 			if digit==olddigit:
 				digit=random.randint(1,9)
@@ -447,6 +442,7 @@ def gameLaunch(game):
 				digit=8
 			guitarDisplay(digit)
 		elif(game==2):
+			print("Quel motif sentez vous?")
 			print("0 est : \u007C  1      \u007C   2     \u007C   3     \u007C  4     ")
 			print("  \u2588 \u2588   \u007C   \u2588     \u007C \u2588     \u2588 \u007C   \u2588     \u007C \u2588     \u2588")
 			print("\u2588     \u2588 \u007C \u2588 \u2588     \u007C         \u007C \u2588       \u007C        ")
@@ -469,11 +465,11 @@ def gameLaunch(game):
 		os.system('clear')
 		result=0
 		if(guess==str(digit)):
-			print("Bien jou? le resultat ?ait bien",digit)
+			print("Bien joué le resultat était bien ",digit)
 			score=score+1
 			result=1
 		else:
-			print("Loup? le resultat ?ait",digit)
+			print("Loupé le resultat était",digit)
 		stat[game]=stat[game]+","+str(result)
 		statG=statG+","+str(result)
 		VstatTime=int((time.time()-oldTime)*10)
@@ -481,7 +477,7 @@ def gameLaunch(game):
 		statGTime=statGTime+","+str(VstatTime)
 	os.system('clear')
 	displayNone()
-	print("Vous avez "+str(score)+" bonne(s) r?onse(s) sur 10")
+	print("Vous avez "+str(score)+" bonne(s) réponse(s) sur 10")
 	timeSpend=int(time.time()-debut)
 	print("Vous avez pris "+str(timeSpend)+" secondes pour finir la partie")
 	print("")
@@ -496,3 +492,6 @@ def gameLaunch(game):
 	else :
 		stopGame()
 login()
+
+
+
